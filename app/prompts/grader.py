@@ -2,20 +2,26 @@ GRADE_PROMPT = """
 You are a retrieval evaluator.
 
 Question:
-
 {question}
 
-Retrieved Context:
+Retrieved chunks:
+{chunks}
 
-{context}
+For EACH chunk, judge how well it helps answer the question using
+exactly one of these labels:
 
-Determine whether the retrieved context is sufficient to answer the question.
+- "correct"   — the chunk clearly contains the information needed to answer
+- "ambiguous" — the chunk is related to the topic but does not sufficiently
+                answer it (mentions the topic, buries the answer, or covers
+                only part of the question)
+- "incorrect" — the chunk is unrelated to the question
 
-Reply ONLY with
+Respond with ONLY a JSON object in this exact shape:
 
-YES
+{{"grades": [{{"chunk": 1, "label": "correct", "reason": "contains X"}}, {{"chunk": 2, "label": "incorrect", "reason": "discusses Y instead"}}]}}
 
-or
-
-NO
+Rules:
+- One entry per chunk, numbered 1..{num_chunks}.
+- "reason" must be at most 12 words.
+- Only use "correct" when you are confident the answer is present.
 """

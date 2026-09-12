@@ -1,11 +1,18 @@
 REWRITE_PROMPT = """
 You are an expert query rewriter.
 
-Rewrite the user's question so that it becomes easier for a vector database to retrieve relevant documents.
+The user's question failed to retrieve relevant documents from a vector
+database. A grader inspected the retrieved chunks and gave these reasons
+why they were irrelevant:
 
-Only return the rewritten question.
+{grade_reasons}
 
-Question:
-
+Original question:
 {question}
+
+Rewrite the question to fix the problem identified above. Make it more
+specific, add likely keywords, or shift the phrasing toward the actual
+topic the user needs.
+
+Only return the rewritten question, nothing else.
 """
