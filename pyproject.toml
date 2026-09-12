@@ -1,0 +1,5 @@
+[project]
+name = "crag"
+version = "0.1.0"
+description = "Crag project scaffold"
+requires-python = ">=3.10"

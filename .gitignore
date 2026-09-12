@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+
+# Environment
+.env
+
+# Virtual environment
+venv/
+.venv/
+
+# Logs
+logs/
+
+# Vector DB (generated at runtime)
+data/chroma_db/
+
+# Uploaded & test PDFs (user data, not part of repo)
+data/documents/
+data/*.pdf
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Streamlit / Test cache
+.streamlit/
+.pytest_cache/
+
+# Build
+dist/
+build/
