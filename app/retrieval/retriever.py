@@ -2,7 +2,8 @@ from pathlib import Path
 
 from langchain_core.documents import Document
 
-from app.config import TOP_K
+from app.config import HYBRID_CANDIDATES
+from app.retrieval.hybrid import HybridRetriever, Reranker
 from app.retrieval.vectordb import vector_db
 
 
@@ -10,27 +11,23 @@ class Retriever:
 
     def __init__(self):
 
-        self.retriever = vector_db.as_retriever(
-            search_kwargs={
-                "k": TOP_K
-            }
-        )
+        self.hybrid = HybridRetriever(vector_db)
+        self.reranker = Reranker()
 
     def retrieve(
         self,
         question: str,
         doc_filter: list[str] | None = None,
     ) -> list[Document]:
+        """Hybrid retrieve (dense + BM25 → RRF) → cross-encoder rerank → top-K."""
 
-        if doc_filter:
-            # Filter to specific documents by name
-            return vector_db.similarity_search(
-                question,
-                k=TOP_K,
-                filter={"doc_name": {"$in": doc_filter}},
-            )
+        candidates = self.hybrid.retrieve(
+            question,
+            top_n=HYBRID_CANDIDATES,
+            doc_filter=doc_filter,
+        )
 
-        return self.retriever.invoke(question)
+        return self.reranker.rerank(question, candidates)
 
     def get_available_documents(self) -> list[str]:
         """Return list of unique doc names indexed in ChromaDB."""
