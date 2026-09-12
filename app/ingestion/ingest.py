@@ -15,9 +15,28 @@ class IngestionPipeline:
 
     def ingest(self, file_path: str):
 
+        doc_name = Path(file_path).name
+
+        # Remove old chunks for this doc to avoid duplicates on re-upload
+        existing = vector_db._collection.get(
+            where={"doc_name": {"$eq": doc_name}},
+            include=[],
+        )
+        if existing["ids"]:
+            logger.info(
+                f"{doc_name} already indexed ({len(existing['ids'])} chunks). Replacing..."
+            )
+            vector_db._collection.delete(
+                where={"doc_name": {"$eq": doc_name}}
+            )
+
         logger.info(f"Loading {file_path}")
 
         documents = self.loader.load(file_path)
+
+        # Tag every page with the doc name for filtering later
+        for doc in documents:
+            doc.metadata["doc_name"] = doc_name
 
         chunks = self.splitter.split(documents)
 
@@ -26,5 +45,5 @@ class IngestionPipeline:
         vector_db.add_documents(chunks)
 
         logger.success(
-            f"{Path(file_path).name} indexed successfully."
+            f"{doc_name} indexed successfully."
         )

@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from app.llm.model import llm
 
 from app.prompts.grader import GRADE_PROMPT
@@ -13,9 +15,16 @@ retriever = Retriever()
 def retrieve(state):
 
     question = state["question"]
-    print(f"\n[NODE] RETRIEVE — searching for: '{question}'")
+    selected_docs = state.get("selected_docs") or []
 
-    docs = retriever.retrieve(question)
+    print(f"\n[NODE] RETRIEVE — searching for: '{question}'")
+    if selected_docs:
+        print(f"[NODE] RETRIEVE — filtering to docs: {selected_docs}")
+
+    docs = retriever.retrieve(
+        question,
+        doc_filter=selected_docs or None,
+    )
     print(f"[NODE] RETRIEVE — found {len(docs)} chunks")
 
     return {
@@ -52,6 +61,7 @@ def grade_documents(state):
 def rewrite_query(state):
 
     question = state["question"]
+    selected_docs = state.get("selected_docs") or []
     print(f"\n[NODE] REWRITE — original: '{question}'")
 
     prompt = REWRITE_PROMPT.format(
@@ -63,7 +73,10 @@ def rewrite_query(state):
     rewritten = response.content.strip()
     print(f"[NODE] REWRITE — rewritten to: '{rewritten}'")
 
-    docs = retriever.retrieve(rewritten)
+    docs = retriever.retrieve(
+        rewritten,
+        doc_filter=selected_docs or None,
+    )
     print(f"[NODE] REWRITE — re-retrieved {len(docs)} chunks")
 
     return {
@@ -94,6 +107,21 @@ def generate(state):
     response = llm.invoke(prompt)
     print(f"[NODE] GENERATE — done\n")
 
+    # Build source citations from retrieved chunks
+    sources = []
+    for doc in docs:
+        meta = doc.metadata
+        doc_name = meta.get("doc_name") or Path(
+            meta.get("source", "unknown")
+        ).name
+        page = meta.get("page", 0)
+        sources.append({
+            "doc": doc_name,
+            "page": int(page) + 1,          # 0-indexed → 1-indexed
+            "snippet": doc.page_content[:300].strip(),
+        })
+
     return {
-        "generation": response.content
+        "generation": response.content,
+        "sources": sources,
     }

@@ -14,3 +14,7 @@ class GraphState(TypedDict):
     generation: str
 
     grade: str
+
+    sources: list[dict]           # NEW: source chunks used for the answer
+
+    selected_docs: list[str]      # NEW: doc names to filter retrieval (empty = all)
