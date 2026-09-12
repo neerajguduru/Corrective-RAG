@@ -1,18 +1,36 @@
+"""Batch-index every supported document in data/documents/.
+
+Usage:
+    python scripts/ingest_documents.py
+"""
+
+import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from app.ingestion.loader import DocumentLoader
 from app.ingestion.ingest import IngestionPipeline
+from app.config import BASE_DIR
 
 pipeline = IngestionPipeline()
 
-directory = Path("data/documents")
+directory = BASE_DIR / "data" / "documents"
 
-pdfs = list(directory.glob("*.pdf"))
+files = sorted(
+    f for f in directory.iterdir()
+    if f.suffix.lower() in DocumentLoader.SUPPORTED_SUFFIXES
+) if directory.exists() else []
 
-if not pdfs:
-    print("No PDF files found.")
+if not files:
+    print(f"No supported documents found in {directory}")
+    raise SystemExit(0)
 
-for pdf in pdfs:
+for path in files:
+    print(f"\n=== {path.name} ===")
+    try:
+        pipeline.ingest(str(path))
+    except Exception as e:
+        print(f"FAILED: {e}")
 
-    pipeline.ingest(str(pdf))
-
-print("Finished indexing.")
+print("\nFinished indexing.")
