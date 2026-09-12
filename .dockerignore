@@ -1,0 +1,13 @@
+.git
+.venv
+venv
+__pycache__
+*.pyc
+data
+logs
+.env
+.streamlit
+.pytest_cache
+Dockerfile
+Dockerfile.frontend
+docker-compose.yml

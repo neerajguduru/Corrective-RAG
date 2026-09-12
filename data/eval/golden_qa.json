@@ -1,0 +1,22 @@
+{
+  "_comment": [
+    "Golden QA set for RAGAS evaluation of the CRAG pipeline.",
+    "Replace the samples below with 30-50 question/ground-truth pairs",
+    "sourced from YOUR indexed PDFs. Rules for good pairs:",
+    "   - question is answerable strictly from an indexed document",
+    "   - ground_truth is a complete, self-contained reference answer",
+    "   - cover different docs, pages, and question styles (what/why/how/compare)",
+    "Scores produced by scripts/evaluate_rag.py:",
+    "   faithfulness      — is the answer grounded in the retrieved context (no hallucination)",
+    "   answer_relevancy  — does the answer address the question",
+    "   context_precision — are the retrieved chunks ranked usefully",
+    "   context_recall    — does the retrieved context cover the ground truth",
+    "Targets for production readiness: all >= 0.80."
+  ],
+  "samples": [
+    {
+      "question": "SAMPLE — REPLACE: What is a primary key in a database?",
+      "ground_truth": "SAMPLE — REPLACE: A primary key is a column (or set of columns) that uniquely identifies each row in a table. It cannot contain NULL values and must be unique across all rows."
+    }
+  ]
+}

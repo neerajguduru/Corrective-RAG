@@ -1,0 +1,48 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      # Ollama runs on the HOST machine (not in compose):
+      #   - Linux: `host.docker.internal:host-gateway` below resolves it
+      #   - macOS/Windows: Docker Desktop resolves it automatically
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+      OLLAMA_MODEL: llama3.2
+      EMBEDDING_MODEL: BAAI/bge-small-en-v1.5
+      RERANK_MODEL: BAAI/bge-reranker-base
+      CHROMA_DB: /app/data/chroma_db
+      HYBRID_CANDIDATES: "10"
+      RERANK_TOP_N: "4"
+      MAX_ATTEMPTS: "2"
+      WEB_SEARCH: "true"
+      STRIPS_ENABLED: "true"
+      TELEMETRY_ENABLED: "true"
+      OCR_ENABLED: "true"
+      VERIFY_ENABLED: "true"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      # Vector store, uploads, telemetry, eval data persist here
+      - ./data:/app/data
+      # HuggingFace model cache survives container rebuilds
+      - hf_cache:/root/.cache/huggingface
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "8501:8501"
+    environment:
+      API_URL: http://backend:8000
+    depends_on:
+      backend:
+        condition: service_started
+    restart: unless-stopped
+
+volumes:
+  hf_cache:
