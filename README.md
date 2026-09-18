@@ -1,4 +1,4 @@
-# 📚 Corrective RAG (CRAG) with LangGraph & Ollama
+# Corrective RAG (CRAG) with LangGraph & Ollama
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)
 ![LangGraph](https://img.shields.io/badge/LangGraph-1.2-green.svg)
@@ -15,7 +15,7 @@ open-source — no paid API keys required.
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 * **Faithful CRAG loop**: per-chunk grading into three tiers — *Correct /
   Ambiguous / Incorrect* — with distinct corrective actions for each (based on
@@ -29,7 +29,7 @@ open-source — no paid API keys required.
   system merges your document context with DuckDuckGo web results (no API key).
 * **Answer verification**: every answer is checked for grounding against its
   context; unsupported claims trigger one regeneration retry, otherwise a
-  ⚠️ low-confidence badge lists the flagged claims.
+  low-confidence badge lists the flagged claims.
 * **Conversation memory**: follow-up questions ("what about page 12?") are
   automatically rewritten into standalone questions.
 * **Streaming answers**: tokens stream into the UI via SSE as they are generated.
@@ -44,7 +44,7 @@ open-source — no paid API keys required.
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```mermaid
 flowchart TD
@@ -76,7 +76,7 @@ whole branches.)*
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Option A — Docker (recommended for sharing)
 
@@ -123,24 +123,24 @@ python scripts/ingest_documents.py
 
 ---
 
-## 📖 How to Use
+## How to Use
 
 1. **Upload** documents in the sidebar (multi-select: PDF / DOCX / TXT / MD). A
-   live status panel shows each file moving `⏳ queued → ⚙️ running → ✅`.
+   live status panel shows each file moving `queued → running → done.
    Scanned PDFs are OCR'd automatically.
 2. **Filter search scope** (optional) to specific documents.
 3. **Ask** — including follow-ups; the context is carried automatically.
 4. **Watch the status box**: chunk counts, rewrites, ambiguous+web merges,
    verification retries.
 5. **Read the badges**: `● n/n chunks relevant`, `🔄 rewritten (2 tries)`,
-   `✂️ refined`, `🌐 Web Fallback`, `✅ verified` / `⚠️ low confidence`, and
-   **📑 Source Citations** with page numbers.
-6. **Check 📊 Index Health** in the sidebar: branch distribution, average
+   `refined`, `Web Fallback`, `verified` / `low confidence`, and
+   **Source Citations** with page numbers.
+6. **Check Index Health** in the sidebar: branch distribution, average
    latency, refinement counts and retrieval-health signal.
 
 ---
 
-## 🔌 API Reference (FastAPI on `:8000`)
+## API Reference (FastAPI on `:8000`)
 
 | Method | Path | Description |
 |---|---|---|
@@ -168,7 +168,7 @@ data: {"sources": [...], "verified": true, "attempts": 1, "latency_ms": 8421}
 
 ---
 
-## 🧪 Evaluating Quality (RAGAS)
+## Evaluating Quality (RAGAS)
 
 1. Fill `data/eval/golden_qa.json` with 30–50 question / ground-truth pairs
    from *your* indexed documents (format documented in the file).
@@ -187,7 +187,7 @@ re-run this script — the scores, not vibes, decide what ships.
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
 Corrective-RAG/
@@ -228,7 +228,7 @@ Corrective-RAG/
 
 ---
 
-## ⚙️ Configuration (`.env`)
+## Configuration (`.env`)
 
 | Variable | Default | Purpose |
 |---|---|---|
@@ -248,7 +248,7 @@ Corrective-RAG/
 
 ---
 
-## 🗺️ Roadmap
+## Roadmap
 
 - [x] Per-chunk three-tier grading with knowledge refinement (CRAG paper)
 - [x] Hybrid retrieval (BM25 + dense, RRF) + cross-encoder reranking
@@ -266,7 +266,7 @@ Corrective-RAG/
 
 ---
 
-## 📄 Credits
+## Credits
 
 - [Corrective Retrieval Augmented Generation (Yan et al., 2024)](https://arxiv.org/abs/2401.15884)
 - [RAGAS: Automated Evaluation of RAG (Es et al., 2023)](https://arxiv.org/abs/2309.15217)
