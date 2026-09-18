@@ -132,7 +132,7 @@ python scripts/ingest_documents.py
 3. **Ask** — including follow-ups; the context is carried automatically.
 4. **Watch the status box**: chunk counts, rewrites, ambiguous+web merges,
    verification retries.
-5. **Read the badges**: `● n/n chunks relevant`, `🔄 rewritten (2 tries)`,
+5. **Read the badges**: `● n/n chunks relevant`, `rewritten (2 tries)`,
    `refined`, `Web Fallback`, `verified` / `low confidence`, and
    **Source Citations** with page numbers.
 6. **Check Index Health** in the sidebar: branch distribution, average
